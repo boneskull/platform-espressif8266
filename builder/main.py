@@ -253,8 +253,11 @@ if "PIOFRAMEWORK" in env:
         ota_port = re.match(
             r"\"?((([0-9]{1,3}\.){3}[0-9]{1,3})|.+\.local)\"?$",
             env.get("UPLOAD_PORT"))
-    if ota_port:
-        env.Replace(UPLOADCMD="$UPLOADOTACMD")
+    if env.get("BOARD") == "oak":
+        env.Replace(UPLOADEROTA = join(platform.get_package_dir("tool-oakcli") or "",
+                           "oak"),
+                    UPLOADOTACMD = '"$UPLOADEROTA" -d "$UPLOAD_PORT" "$SOURCE"',
+                    UPLOADCMD="$UPLOADOTACMD")
 
 # Configure native SDK
 else:
